@@ -7,7 +7,7 @@ $successMsg = "";
 $errorMsg = "";
 $old = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['send_message'])) {
 
     $name    = trim($_POST['name'] ?? '');
     $email   = trim($_POST['email'] ?? '');
@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
     if (empty($errors)) {
         try {
+            if (!$pdo) {
+                throw new Exception("Database connection not available");
+            }
             $stmt = $pdo->prepare(
                 "INSERT INTO contact_messages (name, email, subject, message) VALUES (:name, :email, :subject, :message)"
             );

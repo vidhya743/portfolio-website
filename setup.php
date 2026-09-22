@@ -8,6 +8,13 @@
  */
 require "includes/db.php";
 
+if (!$pdo) {
+    echo "<h2>Setup Failed</h2>";
+    echo "<p style='color:red;'>Could not connect to database: " . htmlspecialchars($dbConnectionError ?? 'Connection error') . "</p>";
+    echo "<p>Please ensure MySQL is running, the database is created (or sql/database.sql imported), and your credentials match.</p>";
+    exit;
+}
+
 $hash = password_hash("admin123", PASSWORD_DEFAULT);
 
 $stmt = $pdo->prepare("UPDATE admin_users SET password = :hash WHERE username = 'admin'");
